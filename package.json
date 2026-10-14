@@ -1,0 +1,95 @@
+{
+  "name": "passage-reader",
+  "version": "0.1.1",
+  "description": "Local-first research paper reader",
+  "private": true,
+  "type": "module",
+  "main": "desktop/main.mjs",
+  "author": "Passage",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "desktop": "npm run build && electron .",
+    "build": "tsc --noEmit && vite build && node scripts/copy-pdf-assets.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "lint": "eslint .",
+    "format": "prettier --write src desktop tests docs scripts *.json *.ts *.js *.html .github/workflows/build.yml",
+    "format:check": "prettier --check src desktop tests docs scripts *.json *.ts *.js *.html .github/workflows/build.yml",
+    "package:mac": "npm run build && electron-builder --mac dmg --arm64",
+    "package:dir": "npm run build && electron-builder --dir",
+    "package:win": "npm run build && electron-builder --win nsis --x64",
+    "package:linux": "npm run build && electron-builder --linux AppImage --x64",
+    "android:sync": "npm run build && cap sync android",
+    "test:desktop": "npm run build && node scripts/smoke.mjs",
+    "package:android": "npm run android:sync && cd android && ./gradlew assembleDebug",
+    "test:ai": "npm run build && node scripts/ai-smoke.mjs"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.0.0",
+    "@capacitor/core": "^8.0.0",
+    "lucide-react": "^0.577.0",
+    "pdfjs-dist": "6.4.299",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "sql.js": "^1.14.1"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "8.4.0",
+    "@playwright/test": "^1.58.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "electron": "44.5.1",
+    "electron-builder": "^26.0.0",
+    "eslint": "^9.0.0",
+    "eslint-plugin-react-hooks": "^7.0.0",
+    "pdf-lib": "^1.17.1",
+    "prettier": "^3.0.0",
+    "typescript": "^5.9.0",
+    "typescript-eslint": "^8.0.0",
+    "vite": "^7.0.0",
+    "vitest": "^4.0.0"
+  },
+  "build": {
+    "appId": "com.passage.reader",
+    "productName": "Passage",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "desktop/**/*",
+      "package.json",
+      "src/infrastructure/shared/providers.mjs",
+      "LICENSE",
+      "docs/DEPENDENCIES.md"
+    ],
+    "asar": true,
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": [
+        "dmg"
+      ],
+      "identity": null,
+      "icon": "build/icon.icns"
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "build/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "category": "Office",
+      "icon": "build/icon.png"
+    }
+  }
+}
