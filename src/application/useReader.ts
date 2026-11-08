@@ -177,6 +177,21 @@ export function useReader(
       if (!pdf) return;
       const bounded = Math.max(1, Math.min(pdf.numPages, page));
       if (push) navigation.current.push(positionRef.current);
+      const root = scroller.current;
+      const node = root?.querySelector<HTMLElement>(`[data-page="${bounded}"]`);
+      if (root && node) {
+        // Scroll now so the saved page and scroll offset always agree, even if
+        // the app is closed before the next animation frame.
+        root.scrollTop =
+          node.offsetTop + (block ? block.box.y * node.offsetHeight - 50 : 0);
+        setPosition((p) => ({
+          ...p,
+          page: bounded,
+          active: block?.id,
+          scroll: root.scrollTop,
+        }));
+        return;
+      }
       setPosition((p) => ({ ...p, page: bounded, active: block?.id }));
       requestAnimationFrame(() => {
         const root = scroller.current;
