@@ -4,7 +4,16 @@
 
 ## 使用开发版
 
-macOS Apple Silicon：打开 `release/Passage-0.1.0-arm64.dmg`，将 Passage 拖入 Applications 后启动。此版本未经 Apple 公证；若系统阻止，使用系统设置的「隐私与安全性」检查开发版来源后打开。不要全局关闭系统安全保护。
+从 [Releases](https://github.com/YZQForest/passage/releases/latest) 下载对应平台的安装包（每个文件的 SHA-256 见 `installer-manifest.json`）：
+
+| 平台 | 文件 |
+| --- | --- |
+| macOS（Apple Silicon） | `Passage-0.1.1-arm64.dmg` |
+| Windows（x64） | `Passage.Setup.0.1.1.exe` |
+| Linux（x64） | `passage-reader_0.1.1_amd64.deb` |
+| Android | `Passage-0.1.1-debug.apk` |
+
+macOS：打开 dmg，将 Passage 拖入 Applications 后启动。此版本未经 Apple 公证；若系统阻止，使用系统设置的「隐私与安全性」检查开发版来源后打开。不要全局关闭系统安全保护。
 
 1. 导入本地 PDF。原文件不会被修改，文献库保存受管副本。
 2. 打开偏好设置，选择服务商，填写 API 地址、模型 ID 与自己的 API Key，保存后测试连接。
@@ -40,4 +49,4 @@ AI 集成测试使用明确标记的本地协议 fixture；不会把 fixture 当
 - [验收与未完成项](docs/DELIVERY.md)
 - [第三方许可证](docs/DEPENDENCIES.md)
 
-跨平台构建由 `.github/workflows/build.yml` 定义。仓库未连接 GitHub 时，工作流仅是可运行配置，不能声称云端构建已经成功。正式签名、公证、Windows签名和商店发布需要相应账号及凭据。
+跨平台构建由 `.github/workflows/build.yml` 定义：推送到 main、打 `v*` 标签或提交 PR 时，在 macOS（ARM64 / Intel）、Windows、Linux 上检查格式、lint、单元测试并打包，另构建 Android 调试包；产物作为 Actions artifact 保存。正式签名、公证、Windows签名和商店发布需要相应账号及凭据。
